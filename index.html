@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quel statut juridique pour mon entreprise ?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #f4f1eb;
+    --surface: #ffffff;
+    --ink: #1a1a2e;
+    --ink-light: #555577;
+    --accent: #2563EB;
+    --accent-dark: #1d4ed8;
+    --accent-light: #dbeafe;
+    --yes: #059669;
+    --yes-light: #d1fae5;
+    --no: #dc2626;
+    --no-light: #fee2e2;
+    --warn: #d97706;
+    --warn-light: #fef3c7;
+    --border: #e2ddd6;
+    --shadow: 0 4px 24px rgba(26,26,46,0.08);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    border-bottom: 4px solid var(--accent);
+  }
+  .header-badge {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+  .header-text h1 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+  .header-text p {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #a0a8c0;
+    font-weight: 300;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: var(--border);
+    height: 6px;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* MAIN LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    min-height: calc(100vh - 130px);
+  }
+
+  /* QUESTION PANEL */
+  .question-panel {
+    padding: 40px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px 40px;
+    max-width: 640px;
+    animation: slideIn 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .q-text {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .q-hint {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 300;
+    margin-bottom: 28px;
+    line-height: 1.55;
+    border-left: 3px solid var(--accent-light);
+    padding-left: 12px;
+  }
+
+  /* CHOICES */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-align: left;
+    transition: all 0.18s ease;
+  }
+  .choice-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    transform: translateX(4px);
+  }
+  .choice-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .choice-icon.yes  { background: var(--yes-light); }
+  .choice-icon.no   { background: var(--no-light); }
+  .choice-icon.opt1 { background: #ede9fe; }
+  .choice-icon.opt2 { background: #fce7f3; }
+  .choice-icon.opt3 { background: var(--yes-light); }
+
+  .choice-content { flex: 1; }
+  .choice-label { font-weight: 600; display: block; }
+  .choice-sub   { font-size: 12px; color: var(--ink-light); margin-top: 2px; font-weight: 300; }
+
+  /* BACK BUTTON */
+  .btn-back {
+    margin-top: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--ink-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+
+  /* RESULT CARD */
+  .result-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px 40px;
+    max-width: 640px;
+    animation: slideIn 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px dashed var(--border);
+  }
+  .result-emoji {
+    font-size: 48px;
+    line-height: 1;
+  }
+  .result-title-block {}
+  .result-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .result-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .result-subtitle {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .result-section {
+    margin-bottom: 20px;
+  }
+  .result-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+  .result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag.green  { background: var(--yes-light); color: var(--yes); }
+  .tag.blue   { background: var(--accent-light); color: var(--accent-dark); }
+  .tag.orange { background: var(--warn-light); color: var(--warn); }
+  .tag.red    { background: var(--no-light); color: var(--no); }
+
+  .result-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .result-desc strong { font-weight: 600; color: var(--ink); }
+
+  .result-alert {
+    background: var(--warn-light);
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #92400e;
+    line-height: 1.55;
+    margin-top: 16px;
+  }
+  .result-alert strong { font-weight: 700; }
+
+  .btn-restart {
+    margin-top: 28px;
+    padding: 14px 28px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-restart:hover { background: var(--accent); }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--ink);
+    color: #fff;
+    padding: 40px 28px;
+    border-left: 1px solid #2a2a44;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #6b7aaa;
+    margin-bottom: 20px;
+  }
+
+  /* TRAIL */
+  .trail-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .trail-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .trail-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .trail-dot.empty {
+    background: #2a2a44;
+    border: 2px dashed #3a3a5a;
+  }
+  .trail-text-q {
+    font-size: 11px;
+    color: #6b7aaa;
+    font-weight: 300;
+    margin-bottom: 1px;
+  }
+  .trail-text-a {
+    font-size: 13px;
+    color: #e0e6ff;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .sidebar-divider {
+    border: none;
+    border-top: 1px solid #2a2a44;
+    margin: 28px 0;
+  }
+
+  .criteria-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .criteria-item {
+    background: #1e1e3a;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .criteria-item-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6b7aaa;
+    margin-bottom: 4px;
+  }
+  .criteria-item-value {
+    font-size: 13px;
+    color: #e0e6ff;
+    font-weight: 500;
+  }
+  .criteria-item-value.active {
+    color: #7dd3fc;
+  }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    header { padding: 20px; }
+    .question-panel { padding: 20px; }
+    .question-card, .result-card { padding: 24px; }
+    .progress-wrap { padding: 12px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">CEJM · 3.1</div>
+  <div class="header-text">
+    <h1>Quel statut juridique pour mon entreprise ?</h1>
+    <p>Répondez aux questions pour découvrir la structure adaptée à votre projet · Activité n°2</p>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <span class="progress-label" id="progressLabel">Question 1 / 5</span>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="question-panel" id="mainPanel">
+    <!-- Injected by JS -->
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-title">Votre parcours</div>
+    <ul class="trail-list" id="trailList"></ul>
+
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-title">Les critères clés</div>
+    <div class="criteria-grid">
+      <div class="criteria-item">
+        <div class="criteria-item-label">Nombre de fondateurs</div>
+        <div class="criteria-item-value" id="crit1">—</div>
+      </div>
+      <div class="criteria-item">
+        <div class="criteria-item-label">Protection du patrimoine</div>
+        <div class="criteria-item-value" id="crit2">—</div>
+      </div>
+      <div class="criteria-item">
+        <div class="criteria-item-label">Statut social</div>
+        <div class="criteria-item-value" id="crit3">—</div>
+      </div>
+      <div class="criteria-item">
+        <div class="criteria-item-label">Fiscalité</div>
+        <div class="criteria-item-value" id="crit4">—</div>
+      </div>
+      <div class="criteria-item">
+        <div class="criteria-item-label">Fonctionnement</div>
+        <div class="criteria-item-value" id="crit5">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const questions = [
+  {
+    id: "fondateurs",
+    number: "01",
+    text: "Combien de personnes créent l'entreprise ?",
+    hint: "Le nombre de fondateurs conditionne immédiatement les formes juridiques possibles. Une entreprise individuelle ne peut avoir qu'un seul entrepreneur.",
+    choices: [
+      { label: "Seul(e)", sub: "Je crée l'entreprise tout seul", icon: "👤", cls: "opt1", value: "seul" },
+      { label: "À plusieurs", sub: "Nous sommes 2 associés ou plus", icon: "👥", cls: "opt2", value: "plusieurs" },
+    ]
+  },
+  {
+    id: "patrimoine",
+    number: "02",
+    text: "Souhaitez-vous protéger votre patrimoine personnel ?",
+    hint: "En cas de difficultés financières, les créanciers peuvent-ils saisir vos biens personnels (logement, voiture…) ? La réponse détermine si vous avez besoin d'une responsabilité limitée.",
+    choices: [
+      { label: "Oui, c'est une priorité", sub: "Je veux séparer mes biens personnels des risques de l'entreprise", icon: "🛡️", cls: "yes", value: "oui" },
+      { label: "Non, je prends le risque", sub: "Je n'ai pas ou peu de biens à protéger", icon: "🎲", cls: "no", value: "non" },
+    ]
+  },
+  {
+    id: "statut_social",
+    number: "03",
+    text: "Quel statut social souhaitez-vous pour le dirigeant ?",
+    hint: "Le statut social détermine votre couverture maladie, retraite et cotisations. Le statut « assimilé salarié » offre plus de protection mais coûte plus cher à l'entreprise.",
+    choices: [
+      { label: "Assimilé salarié", sub: "Meilleure protection sociale, affilié à la Sécurité sociale des salariés", icon: "👔", cls: "opt1", value: "assimile" },
+      { label: "Travailleur indépendant (TNS)", sub: "Cotisations moins élevées, affilié à la SSI", icon: "🔧", cls: "opt2", value: "tns" },
+      { label: "Peu importe / Je ne sais pas", sub: "Ce critère n'est pas déterminant pour moi", icon: "🤷", cls: "opt3", value: "indiff" },
+    ]
+  },
+  {
+    id: "fiscalite",
+    number: "04",
+    text: "Comment souhaitez-vous être imposé sur les bénéfices ?",
+    hint: "Impôt sur le Revenu (IR) : les bénéfices s'ajoutent à vos revenus personnels — taux progressif jusqu'à 45 %. Impôt sur les Sociétés (IS) : la société paie l'impôt — taux fixe de 25 %.",
+    choices: [
+      { label: "Impôt sur le Revenu (IR)", sub: "Les bénéfices sont imposés dans ma déclaration personnelle", icon: "📊", cls: "opt1", value: "ir" },
+      { label: "Impôt sur les Sociétés (IS)", sub: "La société paie l'impôt à 25%, je perçois des dividendes", icon: "🏢", cls: "opt2", value: "is" },
+      { label: "Peu importe / Les deux m'intéressent", sub: "Je veux conserver de la flexibilité", icon: "⚖️", cls: "opt3", value: "indiff" },
+    ]
+  },
+  {
+    id: "fonctionnement",
+    number: "05",
+    text: "Comment souhaitez-vous gérer l'entreprise au quotidien ?",
+    hint: "La forme juridique influe sur la liberté d'organisation interne. Certaines formes imposent des règles strictes (SA), d'autres laissent une grande liberté statutaire (SAS).",
+    choices: [
+      { label: "En toute liberté, seul décideur", sub: "Je prends toutes les décisions sans contrainte formelle", icon: "🧭", cls: "opt1", value: "libre" },
+      { label: "Avec des associés, décisions collégiales", sub: "Nous décidons ensemble, les règles sont partagées", icon: "🤝", cls: "opt2", value: "collegial" },
+      { label: "Structure souple mais organisée", sub: "Des statuts flexibles qui laissent de la liberté", icon: "⚙️", cls: "opt3", value: "souple" },
+    ]
+  }
+];
+
+// ─── RESULTS ─────────────────────────────────────────────────────────────────
+
+function computeResult(answers) {
+  const a = answers;
+
+  // Plusieurs fondateurs
+  if (a.fondateurs === "plusieurs") {
+    if (a.fonctionnement === "souple" || a.statut_social === "assimile") {
+      return "SAS";
+    }
+    if (a.statut_social === "tns" && a.patrimoine === "oui") {
+      return "SARL";
+    }
+    if (a.patrimoine === "non") {
+      return "SNC";
+    }
+    return "SARL";
+  }
+
+  // Seul
+  if (a.fondateurs === "seul") {
+    if (a.patrimoine === "non" && a.fiscalite === "ir") {
+      return "EI";
+    }
+    if (a.statut_social === "assimile" || a.fonctionnement === "souple") {
+      return "SASU";
+    }
+    if (a.statut_social === "tns" && a.patrimoine === "oui") {
+      return "EURL";
+    }
+    if (a.patrimoine === "oui") {
+      return "EURL";
+    }
+    return "EI";
+  }
+
+  return "SARL";
+}
+
+const results = {
+  "EI": {
+    emoji: "👤",
+    title: "Entreprise Individuelle",
+    subtitle: "La forme la plus simple pour entreprendre seul",
+    tags: [
+      { label: "1 seul entrepreneur", cls: "blue" },
+      { label: "Pas de capital minimum", cls: "green" },
+      { label: "Création simple et rapide", cls: "green" },
+      { label: "Patrimoine pro séparé (loi 2022)", cls: "orange" },
+      { label: "Impôt sur le Revenu", cls: "blue" },
+    ],
+    desc: `L'<strong>entreprise individuelle (EI)</strong> est la forme juridique la plus accessible. Depuis la loi du 15 mai 2022, le patrimoine personnel et professionnel de l'entrepreneur sont <strong>automatiquement séparés</strong> : les créanciers de l'entreprise ne peuvent pas saisir les biens personnels (logement, épargne…).<br><br>L'entrepreneur est <strong>seul maître à bord</strong> — il prend toutes les décisions et n'a pas à rendre compte à des associés. Les bénéfices sont imposés directement dans sa déclaration de revenus personnelle (IR, taux progressif 0 à 45 %).<br><br>Attention : une personne physique ne peut posséder qu'une seule entreprise individuelle.`,
+    alert: `⚠️ <strong>Attention au régime matrimonial :</strong> si l'entrepreneur est marié sous le régime de la communauté réduite aux acquêts, les biens communs peuvent être exposés. Le régime de la <strong>séparation de biens</strong> est à privilégier.`
+  },
+  "EURL": {
+    emoji: "🔒",
+    title: "EURL",
+    subtitle: "Entreprise Unipersonnelle à Responsabilité Limitée",
+    tags: [
+      { label: "1 seul associé", cls: "blue" },
+      { label: "Responsabilité limitée aux apports", cls: "green" },
+      { label: "Pas de capital minimum", cls: "green" },
+      { label: "Gérant TNS (si associé)", cls: "orange" },
+      { label: "IR par défaut, option IS possible", cls: "blue" },
+    ],
+    desc: `L'<strong>EURL</strong> est une SARL à associé unique. Elle permet d'entreprendre seul tout en bénéficiant de la <strong>responsabilité limitée</strong> : en cas de difficultés, les créanciers ne peuvent saisir que les biens apportés à la société, pas le patrimoine personnel de l'associé.<br><br>Le gérant associé unique a le statut de <strong>travailleur non salarié (TNS)</strong>, relevant de la Sécurité Sociale des Indépendants. Si un gérant non associé est nommé, il sera assimilé salarié.<br><br>La fiscalité par défaut est l'<strong>Impôt sur le Revenu</strong>, mais une option pour l'IS est possible — ce qui offre de la flexibilité selon les bénéfices réalisés.`,
+    alert: `💡 <strong>À retenir :</strong> l'EURL peut se transformer en SARL si l'entrepreneur souhaite s'associer avec d'autres personnes. C'est une bonne structure de départ évolutive.`
+  },
+  "SASU": {
+    emoji: "⚡",
+    title: "SASU",
+    subtitle: "Société par Actions Simplifiée Unipersonnelle",
+    tags: [
+      { label: "1 seul associé", cls: "blue" },
+      { label: "Responsabilité limitée aux apports", cls: "green" },
+      { label: "Président assimilé salarié", cls: "green" },
+      { label: "Grande liberté statutaire", cls: "blue" },
+      { label: "Impôt sur les Sociétés", cls: "orange" },
+    ],
+    desc: `La <strong>SASU</strong> est la forme unipersonnelle de la SAS. Elle offre une <strong>grande liberté d'organisation</strong> : les statuts peuvent être rédigés librement, ce qui permet d'anticiper une future entrée d'associés ou un changement de gouvernance.<br><br>Le président est <strong>assimilé salarié</strong> : il bénéficie de la protection sociale des salariés (maladie, retraite) — une couverture plus étendue, mais des cotisations plus élevées pour la société.<br><br>La SASU est soumise à l'<strong>Impôt sur les Sociétés (IS) à 25 %</strong>. Pour percevoir ses revenus, le dirigeant se verse un salaire et/ou des dividendes.`,
+    alert: `💡 <strong>Flexibilité :</strong> la SASU se transforme facilement en SAS en accueillant de nouveaux actionnaires. C'est la structure privilégiée des entrepreneurs qui anticipent une croissance rapide.`
+  },
+  "SARL": {
+    emoji: "🤝",
+    title: "SARL",
+    subtitle: "Société à Responsabilité Limitée",
+    tags: [
+      { label: "2 à 100 associés", cls: "blue" },
+      { label: "Responsabilité limitée aux apports", cls: "green" },
+      { label: "Pas de capital minimum", cls: "green" },
+      { label: "Gérant majoritaire = TNS", cls: "orange" },
+      { label: "Impôt sur les Sociétés", cls: "orange" },
+    ],
+    desc: `La <strong>SARL</strong> est la forme sociétaire la plus répandue en France. Elle permet à plusieurs associés (2 à 100) d'entreprendre ensemble tout en limitant leur responsabilité au montant de leurs apports.<br><br>Le statut social du gérant dépend de sa position : le <strong>gérant majoritaire</strong> (plus de 50 % des parts) est travailleur non salarié (TNS), tandis que le <strong>gérant minoritaire ou égalitaire</strong> est assimilé salarié.<br><br>Les décisions importantes se prennent en assemblée générale selon des règles de majorité définies par la loi. La cession des parts à des tiers est soumise à l'<strong>agrément des autres associés</strong> (majorité des ¾ des parts).`,
+    alert: `⚠️ <strong>Point de vigilance :</strong> contrairement à la SAS, la SARL est régie par des règles légales plus strictes. La flexibilité d'organisation est plus limitée, ce qui peut freiner certains projets innovants.`
+  },
+  "SAS": {
+    emoji: "🚀",
+    title: "SAS",
+    subtitle: "Société par Actions Simplifiée",
+    tags: [
+      { label: "2 associés minimum", cls: "blue" },
+      { label: "Responsabilité limitée aux apports", cls: "green" },
+      { label: "Grande liberté statutaire", cls: "green" },
+      { label: "Président assimilé salarié", cls: "green" },
+      { label: "Impôt sur les Sociétés", cls: "orange" },
+    ],
+    desc: `La <strong>SAS</strong> est la forme la plus flexible pour entreprendre à plusieurs. Les associés disposent d'une <strong>grande liberté pour rédiger les statuts</strong> : ils définissent librement les règles de gouvernance, les conditions d'entrée de nouveaux actionnaires, la répartition du pouvoir...<br><br>Le président est obligatoirement <strong>assimilé salarié</strong>, bénéficiant de la protection sociale des salariés. La SAS est soumise à l'IS.<br><br>La cession d'actions est libre par défaut, sauf clause d'agrément prévue dans les statuts — ce qui facilite les levées de fonds et l'entrée de nouveaux investisseurs.`,
+    alert: `💡 <strong>Idéal pour :</strong> les projets à fort potentiel de croissance, les startups, ou tout projet nécessitant des règles d'organisation sur mesure. C'est aussi la forme la plus utilisée pour les holdings.`
+  },
+  "SNC": {
+    emoji: "⚠️",
+    title: "SNC",
+    subtitle: "Société en Nom Collectif",
+    tags: [
+      { label: "2 associés minimum", cls: "blue" },
+      { label: "Responsabilité illimitée et solidaire", cls: "red" },
+      { label: "Pas de capital minimum", cls: "green" },
+      { label: "Associés = commerçants", cls: "orange" },
+      { label: "Impôt sur le Revenu", cls: "blue" },
+    ],
+    desc: `La <strong>SNC</strong> est une société de personnes : tous les associés ont la qualité de commerçant et sont <strong>responsables solidairement et indéfiniment</strong> des dettes de la société. En cas de difficultés, les créanciers peuvent saisir les biens personnels de chaque associé.<br><br>Les bénéfices sont imposés à l'<strong>Impôt sur le Revenu</strong> dans la déclaration personnelle de chaque associé. La cession de parts à des tiers nécessite l'accord unanime de tous les associés.<br><br>Cette forme est rare aujourd'hui, sauf dans des cas très spécifiques (réseaux de franchise, distribution comme Monoprix…).`,
+    alert: `⚠️ <strong>Risque élevé :</strong> la SNC expose fortement le patrimoine personnel de chaque associé. Elle est généralement déconseillée sauf si tous les associés ont une confiance absolue les uns envers les autres et si le risque financier est maîtrisé.`
+  }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+
+let answers = {};
+let history = []; // stack of question IDs in order answered
+let currentQId = "fondateurs";
+
+const critLabels = {
+  fondateurs:    { label: "Nombre de fondateurs", values: { seul: "1 seul", plusieurs: "Plusieurs associés" } },
+  patrimoine:    { label: "Protection du patrimoine", values: { oui: "Oui — prioritaire", non: "Non" } },
+  statut_social: { label: "Statut social", values: { assimile: "Assimilé salarié", tns: "TNS / Indépendant", indiff: "Indifférent" } },
+  fiscalite:     { label: "Fiscalité", values: { ir: "Impôt sur le Revenu", is: "Impôt sur les Sociétés", indiff: "Flexible / Les deux" } },
+  fonctionnement:{ label: "Fonctionnement", values: { libre: "Seul décideur", collegial: "Collégial", souple: "Souple & organisé" } },
+};
+
+const critOrder = ["fondateurs","patrimoine","statut_social","fiscalite","fonctionnement"];
+const critEls = { fondateurs: "crit1", patrimoine: "crit2", statut_social: "crit3", fiscalite: "crit4", fonctionnement: "crit5" };
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+function getQuestion(id) { return questions.find(q => q.id === id); }
+
+function updateProgress() {
+  const total = questions.length;
+  const done  = history.length;
+  const pct   = Math.round((done / total) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent =
+    done < total ? `Question ${done + 1} / ${total}` : "Résultat";
+}
+
+function updateSidebar() {
+  // Trail
+  const list = document.getElementById("trailList");
+  list.innerHTML = "";
+  history.forEach((qId, i) => {
+    const q = getQuestion(qId);
+    const choice = q.choices.find(c => c.value === answers[qId]);
+    const li = document.createElement("li");
+    li.className = "trail-item";
+    li.innerHTML = `
+      <div class="trail-dot">${i+1}</div>
+      <div>
+        <div class="trail-text-q">${q.text.substring(0,38)}…</div>
+        <div class="trail-text-a">${choice ? choice.label : "?"}</div>
+      </div>`;
+    list.appendChild(li);
+  });
+  // Add pending dots
+  const remaining = questions.length - history.length;
+  for (let i = 0; i < remaining; i++) {
+    const li = document.createElement("li");
+    li.className = "trail-item";
+    li.innerHTML = `<div class="trail-dot empty"></div><div class="trail-text-a" style="color:#3a3a5a">—</div>`;
+    list.appendChild(li);
+  }
+
+  // Criteria
+  critOrder.forEach((k, idx) => {
+    const el = document.getElementById(critEls[k]);
+    if (answers[k]) {
+      el.textContent = critLabels[k].values[answers[k]];
+      el.className = "criteria-item-value active";
+    } else {
+      el.textContent = "—";
+      el.className = "criteria-item-value";
+    }
+  });
+}
+
+function renderQuestion(qId) {
+  currentQId = qId;
+  const q = getQuestion(qId);
+  const panel = document.getElementById("mainPanel");
+
+  const canBack = history.length > 0;
+
+  panel.innerHTML = `
+    <div class="question-card">
+      <div class="q-number">QUESTION ${q.number}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-hint">${q.hint}</div>
+      <div class="choices">
+        ${q.choices.map(c => `
+          <button class="choice-btn" onclick="choose('${qId}', '${c.value}')">
+            <div class="choice-icon ${c.cls}">${c.icon}</div>
+            <div class="choice-content">
+              <span class="choice-label">${c.label}</span>
+              <span class="choice-sub">${c.sub}</span>
+            </div>
+          </button>`).join("")}
+      </div>
+      ${canBack ? `<button class="btn-back" onclick="goBack()">← Question précédente</button>` : ""}
+    </div>`;
+
+  updateProgress();
+  updateSidebar();
+}
+
+function renderResult() {
+  const key = computeResult(answers);
+  const r   = results[key];
+  const panel = document.getElementById("mainPanel");
+
+  panel.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-emoji">${r.emoji}</div>
+        <div class="result-title-block">
+          <div class="result-label">Structure recommandée</div>
+          <div class="result-title">${r.title}</div>
+          <div class="result-subtitle">${r.subtitle}</div>
+        </div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">Caractéristiques principales</div>
+        <div class="result-tags">
+          ${r.tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join("")}
+        </div>
+      </div>
+
+      <div class="result-section">
+        <div class="result-section-title">Pourquoi cette structure ?</div>
+        <div class="result-desc">${r.desc}</div>
+      </div>
+
+      ${r.alert ? `<div class="result-alert">${r.alert}</div>` : ""}
+
+      <button class="btn-restart" onclick="restart()">↺ Recommencer</button>
+    </div>`;
+
+  updateProgress();
+  updateSidebar();
+}
+
+// ─── LOGIC ───────────────────────────────────────────────────────────────────
+
+function choose(qId, value) {
+  answers[qId] = value;
+  history.push(qId);
+
+  // Determine next question
+  const qIds = questions.map(q => q.id);
+  const idx  = qIds.indexOf(qId);
+
+  if (idx < questions.length - 1) {
+    renderQuestion(qIds[idx + 1]);
+  } else {
+    renderResult();
+  }
+}
+
+function goBack() {
+  if (history.length === 0) return;
+  const prev = history.pop();
+  delete answers[prev];
+  renderQuestion(prev);
+}
+
+function restart() {
+  answers = {};
+  history = [];
+  renderQuestion("fondateurs");
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderQuestion("fondateurs");
+</script>
+</body>
+</html>
